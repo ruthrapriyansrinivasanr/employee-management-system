@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Employee Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Employee Management System</h1>
+
+    <form class="card form-grid" method="post" action="{{ url_for('add_employee') }}">
+        <input name="name" placeholder="Employee name" required>
+        <input name="email" type="email" placeholder="Email" required>
+        <input name="department" placeholder="Department" required>
+        <input name="salary" type="number" min="0" step="0.01" placeholder="Salary" required>
+        <button type="submit">Add Employee</button>
+    </form>
+
+    <form class="search" method="get">
+        <input name="search" value="{{ search }}" placeholder="Search name, email or department">
+        <button type="submit">Search</button>
+        <a href="{{ url_for('index') }}">Clear</a>
+    </form>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Salary</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            {% for e in employees %}
+                <tr>
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.name }}</td>
+                    <td>{{ e.email }}</td>
+                    <td>{{ e.department }}</td>
+                    <td>{{ "%.2f"|format(e.salary) }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('edit_employee', employee_id=e.id) }}">Edit</a>
+                        <form method="post" action="{{ url_for('delete_employee', employee_id=e.id) }}" style="display:inline">
+                            <button type="submit" onclick="return confirm('Delete this employee?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">No employees found.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
